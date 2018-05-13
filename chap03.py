@@ -7,12 +7,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.colors import ListedColormap
 from sklearn import datasets
-from sklearn.linear_model import LogisticRegression, Perceptron
+from sklearn.linear_model import LogisticRegression, Perceptron, SGDClassifier
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVC
 
 # %% Chapter 03.2. First steps with scikit-learn
+
 
 # load dataset
 iris = datasets.load_iris()
@@ -91,8 +93,8 @@ def plot_decision_regions(X, y, classifier, test_idx=None, resolution=0.02):
 
 X_combined_std = np.vstack([X_train_std, X_test_std])
 y_combined = np.hstack((y_train, y_test))
-plot_decision_regions(X=X_combined_std, y=y_combined,
-                      classifier=ppn, test_idx=range(105, 150))
+plot_decision_regions(X_combined_std, y_combined, ppn,
+                      test_idx=range(105, 150))
 plt.xlabel('petal length [standardized]')
 plt.ylabel('petal width [standardized]')
 plt.legend(loc='upper left')
@@ -105,5 +107,37 @@ plt.show()
 # %% Chapter 03.3. Modeling class probabilities via logistic regression
 
 
+# param C: Inverse of regularization strength
 lr = LogisticRegression(C=1000.0, random_state=0)
-lr.fit(X_train)
+lr.fit(X_train_std, y_train)
+plot_decision_regions(X_combined_std, y_combined, lr,
+                      test_idx=range(105, 150))
+plt.xlabel('petal length [standardized]')
+plt.ylabel('petal width [standardized]')
+plt.legend(loc='upper left')
+plt.tight_layout()
+plt.savefig('images/03_06.pdf', dpi=300)
+plt.show()
+
+
+# %% Chapter 03.4. Maximum margin classification with support vector machines
+
+
+svm = SVC(kernel='linear', C=1.0, random_state=1)
+svm.fit(X_train_std, y_train)
+
+plot_decision_regions(X_combined_std,
+                      y_combined,
+                      svm,
+                      test_idx=range(105, 150))
+plt.xlabel('petal length [standardized]')
+plt.ylabel('petal width [standardized]')
+plt.legend(loc='upper left')
+plt.tight_layout()
+plt.savefig('images/03_11.pdf', dpi=300)
+plt.show()
+
+# Alternative implementations in scikit-learn
+ppn = SGDClassifier(loss='perceptron', n_iter=1000)
+lr = SGDClassifier(loss='log', n_iter=1000)
+svm = SGDClassifier(loss='hinge', n_iter=1000)
