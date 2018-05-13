@@ -1,16 +1,18 @@
-"""Chapter 03."""
-# -*- coding: utf-8 -*-
+"""Chapter 03.2.
+
+A Tour of Machine Learning Classifiers Using Scikit-Learn
+"""
 
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.colors import ListedColormap
 from sklearn import datasets
-from sklearn.linear_model import Perceptron
+from sklearn.linear_model import LogisticRegression, Perceptron
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
-# %% Chapter 3.2 First steps with scikit-learn
+# %% Chapter 03.2. First steps with scikit-learn
 
 # load dataset
 iris = datasets.load_iris()
@@ -98,3 +100,10 @@ plt.tight_layout()
 
 plt.savefig('images/03_01.pdf', dpi=300)
 plt.show()
+
+
+# %% Chapter 03.3. Modeling class probabilities via logistic regression
+
+
+lr = LogisticRegression(C=1000.0, random_state=0)
+lr.fit(X_train)
